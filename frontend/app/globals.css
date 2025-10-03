@@ -1,0 +1,202 @@
+@import "tailwindcss";
+
+:root {
+  /* Hot Pink Primary Colors */
+  --primary-hot-pink: #FF1493;
+  --primary-pink-light: #FF69B4;
+  --primary-pink-dark: #C71585;
+
+  /* Background Colors */
+  --bg-dark: #0a0a0a;
+  --bg-darker: #050505;
+  --bg-card: rgba(255, 255, 255, 0.05);
+
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --text-muted: #a0a0a0;
+
+  /* Glass Effects */
+  --glass-bg: rgba(255, 20, 147, 0.1);
+  --glass-border: rgba(255, 20, 147, 0.2);
+  --glass-shadow: 0 8px 32px 0 rgba(255, 20, 147, 0.15);
+
+  /* Gradient */
+  --gradient-pink: linear-gradient(135deg, rgba(255, 20, 147, 0.3), rgba(199, 21, 133, 0.3));
+  --gradient-pink-hover: linear-gradient(135deg, rgba(255, 20, 147, 0.5), rgba(199, 21, 133, 0.5));
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(180deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Base Styles */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 20, 147, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(255, 20, 147, 0.15);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 20, 147, 0.4);
+  box-shadow: 0 12px 40px rgba(255, 20, 147, 0.25);
+  transform: translateY(-2px);
+}
+
+.glass-button {
+  background: linear-gradient(135deg, rgba(255, 20, 147, 0.3), rgba(199, 21, 133, 0.3));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 105, 180, 0.4);
+  border-radius: 12px;
+  color: white;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(255, 20, 147, 0.2);
+}
+
+.glass-button:hover {
+  background: linear-gradient(135deg, rgba(255, 20, 147, 0.5), rgba(199, 21, 133, 0.5));
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(255, 20, 147, 0.4);
+}
+
+.glass-button:active {
+  transform: translateY(0);
+}
+
+.glass-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.glass-input {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 20, 147, 0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.glass-input:focus {
+  border-color: rgba(255, 20, 147, 0.6);
+  box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.1);
+}
+
+.glass-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Hot Pink Accents */
+.accent-pink {
+  color: var(--primary-hot-pink);
+}
+
+.bg-gradient-pink {
+  background: var(--gradient-pink);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--primary-hot-pink), var(--primary-pink-dark));
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hot-pink);
+}
+
+/* Animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Smooth page transitions */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better text rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Container max widths for better readability */
+.container {
+  max-width: 1400px;
+}
+
+/* Link transitions */
+a {
+  transition: color 0.2s ease;
+}
+
+/* Improve button responsiveness on mobile */
+@media (max-width: 640px) {
+  .glass-button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Ensure proper layout structure */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Center content on large screens */
+.max-w-5xl,
+.max-w-6xl,
+.max-w-3xl,
+.max-w-4xl {
+  margin-left: auto;
+  margin-right: auto;
+}
