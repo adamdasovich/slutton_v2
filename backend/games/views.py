@@ -1,10 +1,11 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from .models import GameCategory, Game, GameProgress, GameRating
+from datetime import date
+from .models import GameCategory, Game, GameProgress, GameRating, DailyMemoryImages
 from .serializers import (
     GameCategorySerializer,
     GameSerializer,
@@ -79,6 +80,36 @@ class GameViewSet(viewsets.ReadOnlyModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def complete(self, request, slug=None):
+        """Mark game as completed and save score"""
+        game = self.get_object()
+        score = request.data.get('score', 0)
+        time_taken = request.data.get('time_taken', 0)
+        moves = request.data.get('moves', 0)
+
+        # Update or create progress
+        progress, created = GameProgress.objects.update_or_create(
+            user=request.user,
+            game=game,
+            defaults={
+                'completed': True,
+                'progress_data': {
+                    'score': score,
+                    'time_taken_seconds': time_taken,
+                    'moves': moves,
+                    'completed_at': str(request.data.get('completed_at', ''))
+                },
+                'play_time_minutes': time_taken // 60
+            }
+        )
+
+        return Response({
+            'message': 'Game completed successfully',
+            'score': score,
+            'progress_id': progress.id
+        }, status=status.HTTP_200_OK)
+
 
 class GameProgressViewSet(viewsets.ModelViewSet):
     """Game progress viewset"""
@@ -90,3 +121,31 @@ class GameProgressViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class MemoryImagesViewSet(viewsets.ViewSet):
+    """Memory game images viewset"""
+    permission_classes = [AllowAny]
+
+    @action(detail=False, methods=['get'])
+    def today(self, request):
+        """Get today's memory game images"""
+        today = date.today()
+
+        try:
+            daily_images = DailyMemoryImages.objects.get(
+                date=today,
+                is_active=True
+            )
+        except DailyMemoryImages.DoesNotExist:
+            return Response(
+                {'error': 'No images available for today. Contact admin to generate.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        return Response({
+            'date': daily_images.date,
+            'theme': daily_images.theme,
+            'description': daily_images.description,
+            'images': daily_images.images
+        })

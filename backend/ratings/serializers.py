@@ -3,13 +3,14 @@ from .models import ProductRating
 
 
 class ProductRatingSerializer(serializers.ModelSerializer):
-    """Product rating serializer"""
+    """Product rating and review serializer"""
     username = serializers.CharField(source='user.username', read_only=True)
+    user_id = serializers.IntegerField(source='user.id', read_only=True)
 
     class Meta:
         model = ProductRating
-        fields = ['id', 'username', 'rating', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'username', 'created_at', 'updated_at']
+        fields = ['id', 'user_id', 'username', 'rating', 'review', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'user_id', 'username', 'created_at', 'updated_at']
 
     def validate_rating(self, value):
         if value < 1 or value > 5:

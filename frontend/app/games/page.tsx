@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import GlassCard from '@/components/ui/GlassCard';
 import GlassButton from '@/components/ui/GlassButton';
 import api from '@/lib/api';
@@ -34,15 +35,18 @@ interface GameCategory {
 }
 
 export default function GamesPage() {
+  const router = useRouter();
   const [games, setGames] = useState<Game[]>([]);
   const [categories, setCategories] = useState<GameCategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [loading, setLoading] = useState(true);
+  const [triviaData, setTriviaData] = useState<any>(null);
 
   useEffect(() => {
     fetchGames();
     fetchCategories();
+    fetchTriviaInfo();
   }, [selectedCategory]);
 
   const fetchGames = async () => {
@@ -67,14 +71,35 @@ export default function GamesPage() {
     }
   };
 
+  const fetchTriviaInfo = async () => {
+    try {
+      const response = await api.get('/trivia/today/');
+      setTriviaData(response.data);
+    } catch (error) {
+      console.error('Error fetching trivia info:', error);
+    }
+  };
+
   const handlePlayGame = async (game: Game) => {
     try {
       // Increment play count
       await api.post(`/games/games/${game.slug}/play/`);
-      setSelectedGame(game);
+
+      // Check if game URL is internal (starts with /)
+      if (game.game_url.startsWith('/')) {
+        router.push(game.game_url);
+      } else {
+        // External URL - open in modal
+        setSelectedGame(game);
+      }
     } catch (error) {
       console.error('Error starting game:', error);
-      setSelectedGame(game);
+      // Still navigate/open even if play count fails
+      if (game.game_url.startsWith('/')) {
+        router.push(game.game_url);
+      } else {
+        setSelectedGame(game);
+      }
     }
   };
 
@@ -136,6 +161,83 @@ export default function GamesPage() {
             </button>
           ))}
         </div>
+
+        {/* Featured: Daily Trivia */}
+        {triviaData && (
+          <div className="mb-8">
+            <GlassCard className="overflow-hidden border-2 border-[--primary-hot-pink]">
+              <div className="grid md:grid-cols-2 gap-6 p-6">
+                <div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-5xl">🎯</span>
+                    <div>
+                      <div className="text-xs uppercase tracking-wider text-[--primary-hot-pink] font-bold mb-1">
+                        Featured Daily Game
+                      </div>
+                      <h2 className="text-3xl font-bold">Midnight Mysteries Trivia</h2>
+                    </div>
+                  </div>
+
+                  <p className="text-gray-300 mb-4">
+                    <span className="font-semibold text-[--primary-hot-pink]">Today's Theme:</span> {triviaData.trivia.theme}
+                  </p>
+
+                  <p className="text-gray-400 mb-6">
+                    Test your knowledge with 15 witty, sexy, challenging questions. Compete daily for top spots and earn points for discounts!
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="bg-white/5 rounded-lg p-3">
+                      <div className="text-2xl font-bold text-[--primary-hot-pink]">15</div>
+                      <div className="text-xs text-gray-400">Questions</div>
+                    </div>
+                    <div className="bg-white/5 rounded-lg p-3">
+                      <div className="text-2xl font-bold text-[--primary-hot-pink]">5min</div>
+                      <div className="text-xs text-gray-400">Time Limit</div>
+                    </div>
+                    <div className="bg-white/5 rounded-lg p-3">
+                      <div className="text-2xl font-bold text-[--primary-hot-pink]">1x/day</div>
+                      <div className="text-xs text-gray-400">Play Limit</div>
+                    </div>
+                    <div className="bg-white/5 rounded-lg p-3">
+                      <div className="text-2xl font-bold text-[--primary-hot-pink]">100pts</div>
+                      <div className="text-xs text-gray-400">1st Place</div>
+                    </div>
+                  </div>
+
+                  <GlassButton
+                    fullWidth
+                    onClick={() => router.push('/trivia')}
+                    disabled={triviaData.has_played}
+                  >
+                    {triviaData.has_played ? 'Already Played Today' : 'Play Now'}
+                  </GlassButton>
+
+                  {triviaData.has_played && (
+                    <p className="text-sm text-center text-gray-400 mt-3">
+                      Come back tomorrow for a new challenge!
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex flex-col justify-center items-center bg-gradient-to-br from-[--primary-hot-pink]/20 to-[--primary-pink-dark]/20 rounded-lg p-6">
+                  <div className="text-6xl mb-4">💋</div>
+                  <h3 className="text-xl font-bold mb-2 text-center">How It Works</h3>
+                  <ul className="space-y-2 text-sm text-gray-300">
+                    <li>✓ Answer 15 sensual questions</li>
+                    <li>✓ Earn points for correct answers</li>
+                    <li>✓ Compete on live leaderboard</li>
+                    <li>✓ Win bonus points for top 3</li>
+                    <li>✓ Convert points to discounts</li>
+                  </ul>
+                  <div className="mt-4 text-center text-xs text-gray-400">
+                    1 point = $0.10 off your purchases
+                  </div>
+                </div>
+              </div>
+            </GlassCard>
+          </div>
+        )}
 
         {/* Games Grid */}
         {loading ? (

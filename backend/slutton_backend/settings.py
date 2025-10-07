@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "ratings",
     "comments",
     "games",
+    "trivia",
 ]
 
 MIDDLEWARE = [
@@ -91,14 +92,23 @@ WSGI_APPLICATION = "slutton_backend.wsgi.application"
 ASGI_APPLICATION = "slutton_backend.asgi.application"
 
 # Channels configuration
+# Use in-memory channel layer for development (no Redis needed)
+# For production, switch to RedisChannelLayer
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
-        },
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
     },
 }
+
+# Production Redis configuration (uncomment when Redis is available):
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("127.0.0.1", 6379)],
+#         },
+#     },
+# }
 
 
 # Database

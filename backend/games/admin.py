@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import GameCategory, Game, GameProgress, GameRating
+from django.contrib import messages
+from .models import GameCategory, Game, GameProgress, GameRating, DailyMemoryImages
+from .claude_image_service import ClaudeImageGenerator
 
 
 @admin.register(GameCategory)
@@ -33,3 +35,52 @@ class GameRatingAdmin(admin.ModelAdmin):
     list_filter = ['rating', 'created_at']
     search_fields = ['user__username', 'game__name', 'review']
     readonly_fields = ['created_at', 'updated_at']
+
+
+@admin.register(DailyMemoryImages)
+class DailyMemoryImagesAdmin(admin.ModelAdmin):
+    list_display = ['date', 'theme', 'is_active', 'image_count', 'created_at']
+    list_filter = ['is_active', 'date']
+    search_fields = ['theme', 'description']
+    readonly_fields = ['created_at', 'updated_at']
+    list_editable = ['is_active']
+    actions = ['regenerate_images']
+
+    def image_count(self, obj):
+        """Display number of images"""
+        return len(obj.images)
+    image_count.short_description = 'Images'
+
+    def regenerate_images(self, request, queryset):
+        """Regenerate images using Claude AI"""
+        generator = ClaudeImageGenerator()
+        success_count = 0
+
+        for daily_images in queryset:
+            try:
+                # Generate new images
+                image_data = generator.generate_daily_images(daily_images.date)
+
+                # Update existing record
+                daily_images.theme = image_data['theme']
+                daily_images.description = image_data['description']
+                daily_images.images = image_data['images']
+                daily_images.save()
+
+                success_count += 1
+
+            except Exception as e:
+                self.message_user(
+                    request,
+                    f'Error regenerating images for {daily_images.date}: {str(e)}',
+                    level=messages.ERROR
+                )
+
+        if success_count > 0:
+            self.message_user(
+                request,
+                f'Successfully regenerated images for {success_count} date(s)',
+                level=messages.SUCCESS
+            )
+
+    regenerate_images.short_description = 'Regenerate images with Claude AI'

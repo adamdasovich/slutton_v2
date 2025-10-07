@@ -78,8 +78,9 @@ export default function RegisterPage() {
       localStorage.setItem('access_token', loginResponse.data.access);
       localStorage.setItem('refresh_token', loginResponse.data.refresh);
 
-      // Set user in store
-      setUser(registerResponse.data);
+      // Get user profile to set in store
+      const profileResponse = await api.get('/auth/profile/');
+      setUser(profileResponse.data);
 
       // Redirect to home
       router.push('/');

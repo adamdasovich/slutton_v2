@@ -119,3 +119,24 @@ class GameRating(models.Model):
         # Update game average rating
         self.game.average_rating = self.game.ratings.aggregate(models.Avg('rating'))['rating__avg'] or 0
         self.game.save(update_fields=['average_rating'])
+
+
+class DailyMemoryImages(models.Model):
+    """Daily set of images for Memory Match game"""
+    date = models.DateField(unique=True)
+    theme = models.CharField(max_length=200, help_text="Daily theme (e.g., 'Lingerie & Lace', 'Red Hot Passion')")
+    description = models.TextField(blank=True)
+    images = models.JSONField(
+        help_text="Array of 8 image URLs for the memory game",
+        default=list
+    )
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = "Daily Memory Images"
+        ordering = ['-date']
+
+    def __str__(self):
+        return f"Memory Images - {self.date} - {self.theme}"

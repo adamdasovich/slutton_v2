@@ -32,7 +32,7 @@ export default function Header() {
         </nav>
 
         {/* Right Side */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-4">
           {/* Cart */}
           <Link href="/cart" className="relative">
             <svg
@@ -59,19 +59,19 @@ export default function Header() {
           {isAuthenticated ? (
             <>
               <Link href="/account">
-                <GlassButton variant="secondary">
+                <GlassButton variant="secondary" size="small">
                   {user?.username}
                 </GlassButton>
               </Link>
-              <GlassButton onClick={logout}>Logout</GlassButton>
+              <GlassButton onClick={logout} size="small">Logout</GlassButton>
             </>
           ) : (
             <>
               <Link href="/login">
-                <GlassButton variant="secondary">Login</GlassButton>
+                <GlassButton variant="secondary" size="small">Login</GlassButton>
               </Link>
               <Link href="/register">
-                <GlassButton>Sign Up</GlassButton>
+                <GlassButton size="small">Sign Up</GlassButton>
               </Link>
             </>
           )}

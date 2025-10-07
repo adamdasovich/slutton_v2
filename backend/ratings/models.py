@@ -5,13 +5,14 @@ from products.models import Product
 
 
 class ProductRating(models.Model):
-    """Product rating model"""
+    """Product rating and review model"""
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ratings')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='ratings')
     rating = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)],
         help_text="Rating from 1 to 5 stars"
     )
+    review = models.TextField(blank=True, help_text="Written review (optional)")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

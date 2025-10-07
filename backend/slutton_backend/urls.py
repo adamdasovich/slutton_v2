@@ -16,6 +16,7 @@ urlpatterns = [
     path('api/products/<slug:product_slug>/ratings/', include('ratings.urls')),
     path('api/products/<slug:product_slug>/comments/', include('comments.urls')),
     path('api/games/', include('games.urls')),
+    path('api/trivia/', include('trivia.urls')),
 ]
 
 # Serve media files in development
