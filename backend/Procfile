@@ -1,0 +1,2 @@
+web: gunicorn slutton_backend.wsgi:application --bind 0.0.0.0:$PORT
+worker: daphne -b 0.0.0.0 -p $PORT slutton_backend.asgi:application
