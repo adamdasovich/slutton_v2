@@ -37,8 +37,8 @@ class Command(BaseCommand):
                     self.style.WARNING(f'Deleted existing trivia for {today}')
                 )
 
-        # Get all existing trivia questions (not tied to any DailyTrivia)
-        all_questions = list(TriviaQuestion.objects.filter(daily_trivia__isnull=True))
+        # Get all existing trivia questions
+        all_questions = list(TriviaQuestion.objects.all())
 
         if len(all_questions) < 15:
             self.stdout.write(
@@ -48,8 +48,10 @@ class Command(BaseCommand):
             )
             return
 
+        self.stdout.write(f'Found {len(all_questions)} total questions in database')
+
         # Randomly select 15 questions
-        selected_questions = random.sample(all_questions, 15)
+        selected_questions = random.sample(all_questions, min(15, len(all_questions)))
 
         # Create DailyTrivia
         daily_trivia = DailyTrivia.objects.create(
@@ -59,11 +61,18 @@ class Command(BaseCommand):
             is_active=True
         )
 
-        # Assign questions to this daily trivia
-        for index, question in enumerate(selected_questions, 1):
-            question.daily_trivia = daily_trivia
-            question.order = index
-            question.save()
+        # Create copies of selected questions for today's trivia
+        for index, original_question in enumerate(selected_questions, 1):
+            TriviaQuestion.objects.create(
+                daily_trivia=daily_trivia,
+                order=index,
+                question_text=original_question.question_text,
+                question_type=original_question.question_type,
+                difficulty=original_question.difficulty,
+                options=original_question.options,
+                correct_answer=original_question.correct_answer,
+                explanation=original_question.explanation
+            )
 
         self.stdout.write(
             self.style.SUCCESS(
