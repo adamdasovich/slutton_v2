@@ -25,6 +25,12 @@ def export_data():
             continue
         if model._meta.model_name == 'permission' and model._meta.app_label == 'auth':
             continue
+        # Skip admin log entries - they cause constraint violations on import
+        if model._meta.model_name == 'logentry' and model._meta.app_label == 'admin':
+            continue
+        # Skip sessions - not needed for production
+        if model._meta.app_label == 'sessions':
+            continue
 
         # Get all objects from this model
         objects = model.objects.all()
