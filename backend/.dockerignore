@@ -14,4 +14,3 @@ env/
 staticfiles/
 media/
 *.sqlite3
-datadump.json
