@@ -242,3 +242,4 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_your_live_publishable_key
 ## License
 
 Proprietary - All rights reserved
+# Deploy trigger
