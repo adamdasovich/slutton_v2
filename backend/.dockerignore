@@ -12,5 +12,4 @@ venv/
 env/
 .venv/
 staticfiles/
-media/
 *.sqlite3
