@@ -9,10 +9,10 @@ if [ "$RUN_IMPORT" = "true" ]; then
     python import_on_railway.py
 fi
 
-# Create superuser if environment variables are set
-if [ -n "$DJANGO_SUPERUSER_USERNAME" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ]; then
-    echo "Creating superuser if it doesn't exist..."
-    python manage.py createsuperuser --noinput --username "$DJANGO_SUPERUSER_USERNAME" --email "$DJANGO_SUPERUSER_EMAIL" 2>/dev/null || echo "Superuser already exists or creation skipped"
+# Reset/create superuser password if RUN_PASSWORD_RESET is set
+if [ "$RUN_PASSWORD_RESET" = "true" ]; then
+    echo "Resetting superuser password..."
+    python reset_superuser.py
 fi
 
 echo "Starting gunicorn..."
