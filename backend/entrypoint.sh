@@ -3,6 +3,10 @@
 echo "Running database migrations..."
 python manage.py migrate --noinput
 
+# Generate daily trivia if needed
+echo "Generating daily trivia..."
+python manage.py generate_daily_trivia || echo "Trivia generation skipped"
+
 # Import data if RUN_IMPORT is set
 if [ "$RUN_IMPORT" = "true" ]; then
     echo "RUN_IMPORT is true, importing data..."
