@@ -16,4 +16,8 @@ if [ -n "$DJANGO_SUPERUSER_USERNAME" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ]; t
 fi
 
 echo "Starting gunicorn..."
+echo "PORT is set to: $PORT"
+# Use PORT from Railway, default to 8000 if not set
+PORT=${PORT:-8000}
+echo "Using PORT: $PORT"
 exec gunicorn slutton_backend.wsgi:application --bind 0.0.0.0:$PORT --workers 2
