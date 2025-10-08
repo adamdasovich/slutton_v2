@@ -23,11 +23,15 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY . .
 
+# Copy and set entrypoint script permissions
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
 # Collect static files
 RUN python manage.py collectstatic --noinput --settings=slutton_backend.settings_production || echo "Collectstatic failed, continuing..."
 
 # Expose port
 EXPOSE 8000
 
-# Run gunicorn
-CMD gunicorn slutton_backend.wsgi:application --bind 0.0.0.0:$PORT --workers 2
+# Run entrypoint script
+CMD ["/app/entrypoint.sh"]
