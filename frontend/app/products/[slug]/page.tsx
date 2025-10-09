@@ -136,8 +136,9 @@ export default function ProductDetailPage() {
     // Get JWT token from localStorage
     const token = localStorage.getItem('access_token');
 
-    // Use environment variable for WebSocket URL
+    // Use environment variable for WebSocket URL (must be set in Vercel dashboard)
     const baseWsUrl = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8000/ws';
+    console.log('Environment WS URL:', process.env.NEXT_PUBLIC_WS_URL);
 
     // Pass token in query string
     const wsUrl = token
