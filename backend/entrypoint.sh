@@ -19,9 +19,9 @@ if [ "$RUN_PASSWORD_RESET" = "true" ]; then
     python reset_superuser.py
 fi
 
-echo "Starting gunicorn..."
+echo "Starting Daphne (ASGI server for WebSocket support)..."
 echo "PORT is set to: $PORT"
 # Use PORT from Railway, default to 8000 if not set
 PORT=${PORT:-8000}
 echo "Using PORT: $PORT"
-exec gunicorn slutton_backend.wsgi:application --bind 0.0.0.0:$PORT --workers 2
+exec daphne -b 0.0.0.0 -p $PORT slutton_backend.asgi:application
