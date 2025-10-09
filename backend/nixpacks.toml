@@ -10,4 +10,4 @@ cmds = [
 ]
 
 [start]
-cmd = "gunicorn slutton_backend.wsgi:application --bind 0.0.0.0:$PORT --workers 2"
+cmd = "daphne -b 0.0.0.0 -p $PORT slutton_backend.asgi:application"
