@@ -136,10 +136,13 @@ export default function ProductDetailPage() {
     // Get JWT token from localStorage
     const token = localStorage.getItem('access_token');
 
+    // Use environment variable for WebSocket URL
+    const baseWsUrl = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8000/ws';
+
     // Pass token in query string
     const wsUrl = token
-      ? `ws://localhost:8000/ws/comments/${params.slug}/?token=${token}`
-      : `ws://localhost:8000/ws/comments/${params.slug}/`;
+      ? `${baseWsUrl}/comments/${params.slug}/?token=${token}`
+      : `${baseWsUrl}/comments/${params.slug}/`;
 
     console.log('Connecting to WebSocket:', wsUrl);
 
