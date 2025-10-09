@@ -40,6 +40,8 @@ class OriginValidatorMiddleware(BaseMiddleware):
             headers = dict(scope.get("headers", []))
             origin = headers.get(b"origin", b"").decode()
 
+            print(f"WebSocket connection attempt - Origin: {origin}, Path: {scope.get('path', '')}")
+
             # Check if origin matches any allowed pattern
             allowed = any(
                 re.match(pattern, origin)
@@ -47,12 +49,15 @@ class OriginValidatorMiddleware(BaseMiddleware):
             )
 
             if not allowed and origin:
-                print(f"WebSocket connection rejected from origin: {origin}")
+                print(f"❌ WebSocket connection REJECTED from origin: {origin}")
+                print(f"   Allowed patterns: {self.ALLOWED_ORIGIN_PATTERNS}")
                 await send({
                     "type": "websocket.close",
                     "code": 403,
                 })
                 return
+            else:
+                print(f"✅ WebSocket connection ALLOWED from origin: {origin}")
 
         return await super().__call__(scope, receive, send)
 
