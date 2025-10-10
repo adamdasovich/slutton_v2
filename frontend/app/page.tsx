@@ -22,10 +22,12 @@ export default function Home() {
               Where Pleasure Meets Luxury
             </p>
 
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <p className="text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
               Discover our exquisite collection of adult novelty products and games,
               carefully curated to elevate your intimate experiences to new heights.
             </p>
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
               <Link href="/products" className="w-full sm:w-auto">
