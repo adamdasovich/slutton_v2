@@ -54,7 +54,7 @@ export default function Home() {
           <div className="text-center space-y-4">
             <h2 className="text-3xl md:text-4xl font-bold">
               Why Choose 
-              <span className="accent-pink">Louis</span>
+              <span className="accent-pink"> Louis</span>
               <span className="text-white"> Slutton</span>
               <span className="accent-pink">?</span>
             </h2>
