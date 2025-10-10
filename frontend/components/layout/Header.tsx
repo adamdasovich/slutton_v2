@@ -17,7 +17,7 @@ export default function Header() {
           <span className="accent-pink">Louis</span>
           <span className="text-white"> Slutton</span>
         </Link>
-        <h1>Brought to you by Adam</h1>
+        
 
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-8">
