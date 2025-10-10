@@ -38,6 +38,11 @@ export default function Home() {
                   Browse Categories
                 </GlassButton>
               </Link>
+              <Link href="/games" className="w-full sm:w-auto">
+                <GlassButton variant="secondary" className="text-base px-10 py-4 w-full sm:w-auto">
+                  Games
+                </GlassButton>
+              </Link>
             </div>
           </div>
         </section>
