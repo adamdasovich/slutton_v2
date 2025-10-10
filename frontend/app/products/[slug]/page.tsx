@@ -655,7 +655,7 @@ export default function ProductDetailPage() {
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="text-sm text-gray-400">{new Date(comment.created_at).toLocaleString()}</span>
-                      {user && (user.id === comment.user_id || user.is_staff) && (
+                      {user && user.is_superuser && (
                         <button
                           onClick={() => handleDeleteComment(comment.id)}
                           className="text-xs text-red-400 hover:text-red-300 transition"

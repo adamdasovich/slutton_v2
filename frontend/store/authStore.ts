@@ -6,6 +6,8 @@ interface User {
   username: string;
   email: string;
   age_verified: boolean;
+  is_staff?: boolean;
+  is_superuser?: boolean;
 }
 
 interface AuthState {

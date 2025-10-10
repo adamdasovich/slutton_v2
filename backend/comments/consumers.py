@@ -153,8 +153,8 @@ class CommentConsumer(AsyncWebsocketConsumer):
     def remove_comment(self, comment_id, user_id):
         try:
             comment = ProductComment.objects.get(id=comment_id)
-            # Allow user to delete own comment, or staff/superuser to delete any comment
-            if comment.user_id == user_id or User.objects.get(id=user_id).is_staff:
+            # Only allow superuser to delete any comment
+            if User.objects.get(id=user_id).is_superuser:
                 comment.delete()
                 return True
             return False
