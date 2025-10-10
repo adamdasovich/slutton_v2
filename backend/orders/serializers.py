@@ -14,17 +14,21 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     """Order serializer"""
     items = OrderItemSerializer(many=True, read_only=True)
+    items_count = serializers.SerializerMethodField()
     user_email = serializers.EmailField(source='user.email', read_only=True)
 
     class Meta:
         model = Order
-        fields = ['id', 'order_number', 'user_email', 'status', 'total_amount', 'items',
+        fields = ['id', 'order_number', 'user_email', 'status', 'total_amount', 'items', 'items_count',
                   'shipping_address_line1', 'shipping_address_line2', 'shipping_city',
                   'shipping_state', 'shipping_postal_code', 'shipping_country',
                   'billing_address_line1', 'billing_address_line2', 'billing_city',
                   'billing_state', 'billing_postal_code', 'billing_country',
                   'created_at', 'updated_at']
         read_only_fields = ['id', 'order_number', 'created_at', 'updated_at']
+
+    def get_items_count(self, obj):
+        return obj.items.count()
 
 
 class OrderCreateSerializer(serializers.Serializer):
