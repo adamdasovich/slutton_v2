@@ -8,15 +8,17 @@ import api from '@/lib/api';
 import GlassCard from '@/components/ui/GlassCard';
 import GlassButton from '@/components/ui/GlassButton';
 
-export default function CheckoutForm() {
+interface CheckoutFormProps {
+  clientSecret: string;
+}
+
+export default function CheckoutForm({ clientSecret }: CheckoutFormProps) {
   const router = useRouter();
   const stripe = useStripe();
   const elements = useElements();
   const { clearCart } = useCartStore();
 
   const [processing, setProcessing] = useState(false);
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [paymentIntentCreated, setPaymentIntentCreated] = useState(false);
 
   // Shipping Address
   const [shippingAddress, setShippingAddress] = useState({
@@ -40,24 +42,10 @@ export default function CheckoutForm() {
 
   const [sameAsShipping, setSameAsShipping] = useState(true);
 
-  const handleCreatePaymentIntent = async () => {
-    try {
-      setProcessing(true);
-      const response = await api.post('/orders/create_payment_intent/');
-      setClientSecret(response.data.client_secret);
-      setPaymentIntentCreated(true);
-    } catch (error: any) {
-      console.error('Error creating payment intent:', error);
-      alert(error.response?.data?.error || 'Failed to initialize payment');
-    } finally {
-      setProcessing(false);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!stripe || !elements || !clientSecret) {
+    if (!stripe || !elements) {
       return;
     }
 
@@ -240,36 +228,18 @@ export default function CheckoutForm() {
       </GlassCard>
 
       {/* Payment */}
-      {!paymentIntentCreated ? (
-        <GlassCard className="p-6 mb-6">
-          <h2 className="text-2xl font-bold mb-6">Payment</h2>
-          <p className="text-gray-400 mb-6">
-            Click the button below to initialize secure payment processing.
-          </p>
-          <GlassButton
-            onClick={handleCreatePaymentIntent}
-            disabled={processing || !shippingAddress.line1}
-            fullWidth
-          >
-            {processing ? 'Initializing...' : 'Continue to Payment'}
-          </GlassButton>
-        </GlassCard>
-      ) : (
-        <>
-          <GlassCard className="p-6 mb-6">
-            <h2 className="text-2xl font-bold mb-6">Payment Information</h2>
-            <PaymentElement />
-          </GlassCard>
+      <GlassCard className="p-6 mb-6">
+        <h2 className="text-2xl font-bold mb-6">Payment Information</h2>
+        <PaymentElement />
+      </GlassCard>
 
-          <GlassButton
-            type="submit"
-            disabled={!stripe || processing}
-            fullWidth
-          >
-            {processing ? 'Processing...' : 'Place Order'}
-          </GlassButton>
-        </>
-      )}
+      <GlassButton
+        type="submit"
+        disabled={!stripe || processing}
+        fullWidth
+      >
+        {processing ? 'Processing...' : 'Place Order'}
+      </GlassButton>
     </form>
   );
 }

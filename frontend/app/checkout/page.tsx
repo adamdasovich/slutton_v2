@@ -8,6 +8,8 @@ import { useCartStore } from '@/store/cartStore';
 import { useAuthStore } from '@/store/authStore';
 import CheckoutForm from '@/components/checkout/CheckoutForm';
 import GlassCard from '@/components/ui/GlassCard';
+import GlassButton from '@/components/ui/GlassButton';
+import api from '@/lib/api';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -16,6 +18,8 @@ export default function CheckoutPage() {
   const { cart, fetchCart } = useCartStore();
   const { isAuthenticated } = useAuthStore();
   const [loading, setLoading] = useState(true);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -25,6 +29,19 @@ export default function CheckoutPage() {
 
     fetchCart().finally(() => setLoading(false));
   }, [isAuthenticated, fetchCart, router]);
+
+  const handleCreatePaymentIntent = async () => {
+    try {
+      setCreating(true);
+      const response = await api.post('/orders/create_payment_intent/');
+      setClientSecret(response.data.client_secret);
+    } catch (error: any) {
+      console.error('Error creating payment intent:', error);
+      alert(error.response?.data?.error || 'Failed to initialize payment');
+    } finally {
+      setCreating(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -50,6 +67,8 @@ export default function CheckoutPage() {
     );
   }
 
+  const options = clientSecret ? { clientSecret } : undefined;
+
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <h1 className="text-4xl font-bold mb-8">Checkout</h1>
@@ -57,9 +76,25 @@ export default function CheckoutPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Checkout Form */}
         <div className="lg:col-span-2">
-          <Elements stripe={stripePromise}>
-            <CheckoutForm />
-          </Elements>
+          {!clientSecret ? (
+            <GlassCard className="p-6">
+              <h2 className="text-2xl font-bold mb-6">Ready to Checkout?</h2>
+              <p className="text-gray-400 mb-6">
+                Click below to proceed to secure payment processing.
+              </p>
+              <GlassButton
+                onClick={handleCreatePaymentIntent}
+                disabled={creating}
+                fullWidth
+              >
+                {creating ? 'Initializing...' : 'Continue to Payment'}
+              </GlassButton>
+            </GlassCard>
+          ) : (
+            <Elements stripe={stripePromise} options={options}>
+              <CheckoutForm clientSecret={clientSecret} />
+            </Elements>
+          )}
         </div>
 
         {/* Order Summary */}
