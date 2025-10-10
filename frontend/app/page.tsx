@@ -53,7 +53,7 @@ export default function Home() {
         <section className="w-full space-y-12">
           <div className="text-center space-y-4">
             <h2 className="text-3xl md:text-4xl font-bold">
-              Why Choose <span className="accent-pink">Louis Slutton</span>?
+              Why Choose <span className="accent-pink">Louis</span><span className="text-white"> Slutton</span>?
             </h2>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <p className="text-gray-400 max-w-2xl mx-auto">
