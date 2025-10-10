@@ -55,9 +55,11 @@ export default function Home() {
             <h2 className="text-3xl md:text-4xl font-bold">
               Why Choose <span className="accent-pink">Louis Slutton</span>?
             </h2>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <p className="text-gray-400 max-w-2xl mx-auto">
               Experience the difference with our commitment to quality, privacy, and customer satisfaction
             </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
