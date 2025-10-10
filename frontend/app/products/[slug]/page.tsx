@@ -249,6 +249,29 @@ export default function ProductDetailPage() {
     }
   };
 
+  const handleDeleteComment = (commentId: number) => {
+    if (!confirm('Are you sure you want to delete this comment?')) {
+      return;
+    }
+
+    if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
+      alert('WebSocket is not connected. Please refresh the page.');
+      return;
+    }
+
+    try {
+      wsRef.current.send(
+        JSON.stringify({
+          action: 'delete_comment',
+          comment_id: commentId,
+        })
+      );
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      alert('Failed to delete comment. Please try again.');
+    }
+  };
+
   const handleSubmitRating = async () => {
     if (userRating === 0) {
       alert('Please select a star rating before submitting.');
@@ -630,7 +653,17 @@ export default function ProductDetailPage() {
                         {comment.is_edited && <span className="text-xs text-gray-500 ml-2">(edited)</span>}
                       </div>
                     </div>
-                    <span className="text-sm text-gray-400">{new Date(comment.created_at).toLocaleString()}</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm text-gray-400">{new Date(comment.created_at).toLocaleString()}</span>
+                      {user && (user.id === comment.user_id || user.is_staff) && (
+                        <button
+                          onClick={() => handleDeleteComment(comment.id)}
+                          className="text-xs text-red-400 hover:text-red-300 transition"
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <p className="text-gray-300 ml-13">{comment.content}</p>
 

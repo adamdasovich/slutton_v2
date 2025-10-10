@@ -152,8 +152,11 @@ class CommentConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def remove_comment(self, comment_id, user_id):
         try:
-            comment = ProductComment.objects.get(id=comment_id, user_id=user_id)
-            comment.delete()
-            return True
+            comment = ProductComment.objects.get(id=comment_id)
+            # Allow user to delete own comment, or staff/superuser to delete any comment
+            if comment.user_id == user_id or User.objects.get(id=user_id).is_staff:
+                comment.delete()
+                return True
+            return False
         except ProductComment.DoesNotExist:
             return False
