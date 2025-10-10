@@ -97,7 +97,7 @@ export default function AccountPage() {
 
   const fetchOrders = async () => {
     try {
-      const response = await api.get('/orders/orders/');
+      const response = await api.get('/orders/');
       setOrders(response.data.results || response.data);
     } catch (error: any) {
       // Orders endpoint may not exist yet - just log and continue
