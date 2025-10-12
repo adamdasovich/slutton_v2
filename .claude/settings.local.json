@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl:*)",
+      "Bash(git add:*)",
+      "Bash(git restore:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd automatic daily trivia generation\n\n- Created sample trivia script with 15 lingerie-themed questions\n- Updated entrypoint.sh to run trivia creation on deployment\n- Fixes trivia not appearing on /games page\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nSet up automatic trivia generation for 7 days ahead\n\n- Created generate_trivia_week management command\n- Generates trivia for next 7 days on each deployment\n- Added /trivia/generate_daily/ endpoint for external cron\n- Questions are shuffled daily for variety\n- Random themes assigned each day\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

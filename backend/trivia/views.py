@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.utils import timezone
 from django.db.models import F
 from datetime import date, timedelta
+import os
 from .models import DailyTrivia, TriviaQuestion, TriviaGameSession, TriviaAnswer, UserTriviaStats
 from .serializers import (
     DailyTriviaSerializer,
@@ -287,3 +288,39 @@ class TriviaViewSet(viewsets.ViewSet):
             3: 25,   # 3rd place
         }
         return placement_rewards.get(rank, 0)
+
+    @action(detail=False, methods=['post'], permission_classes=[AllowAny])
+    def generate_daily(self, request):
+        """
+        Endpoint to generate trivia for next 7 days
+        Can be called by external cron service
+        Requires secret key for security
+        """
+        secret = request.data.get('secret') or request.GET.get('secret')
+        expected_secret = os.environ.get('TRIVIA_CRON_SECRET', 'change-me-in-production')
+
+        if secret != expected_secret:
+            return Response(
+                {'error': 'Unauthorized'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        from django.core.management import call_command
+        from io import StringIO
+        import sys
+
+        # Capture command output
+        out = StringIO()
+        try:
+            call_command('generate_trivia_week', '--days', '7', stdout=out)
+            output = out.getvalue()
+            return Response({
+                'success': True,
+                'message': 'Trivia generation completed',
+                'output': output
+            })
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
