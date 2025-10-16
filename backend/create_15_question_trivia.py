@@ -19,7 +19,7 @@ print(f'Deleted existing trivia for {today}')
 trivia = DailyTrivia.objects.create(
     date=today,
     theme="Seductive Secrets & Passionate History",
-    description="Explore the witty, sensual, and intriguing world of adult knowledge with 15 captivating questions",
+    description="Explore the witty, sensual, and intriguing world of sexual adult knowledge with 15 captivating questions",
     is_active=True
 )
 
