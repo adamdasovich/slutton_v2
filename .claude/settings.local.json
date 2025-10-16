@@ -7,7 +7,8 @@
       "Bash(git commit -m \"$(cat <<''EOF''\nAdd automatic daily trivia generation\n\n- Created sample trivia script with 15 lingerie-themed questions\n- Updated entrypoint.sh to run trivia creation on deployment\n- Fixes trivia not appearing on /games page\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git push:*)",
       "Bash(git commit -m \"$(cat <<''EOF''\nSet up automatic trivia generation for 7 days ahead\n\n- Created generate_trivia_week management command\n- Generates trivia for next 7 days on each deployment\n- Added /trivia/generate_daily/ endpoint for external cron\n- Questions are shuffled daily for variety\n- Random themes assigned each day\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(git commit -m \"$(cat <<''EOF''\nAdd 100-question pool for daily trivia variety\n\n- Created question_pool.py with 100 diverse questions\n- Updated generate_trivia_week to randomly select 15 from pool\n- Each day now has truly different questions, not just reordered\n- Categories: History, Materials, Styles, Fit, Industry, Fashion\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd 100-question pool for daily trivia variety\n\n- Created question_pool.py with 100 diverse questions\n- Updated generate_trivia_week to randomly select 15 from pool\n- Each day now has truly different questions, not just reordered\n- Categories: History, Materials, Styles, Fit, Industry, Fashion\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

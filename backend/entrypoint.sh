@@ -3,9 +3,15 @@
 echo "Running database migrations..."
 python manage.py migrate --noinput
 
-# Generate trivia for next 7 days (if not already exists)
-echo "Generating trivia for the next 7 days..."
-python manage.py generate_trivia_week --days 7 || echo "Trivia generation skipped"
+# Regenerate all trivia if REGENERATE_TRIVIA is set
+if [ "$REGENERATE_TRIVIA" = "true" ]; then
+    echo "REGENERATE_TRIVIA is true, regenerating all trivia..."
+    python regenerate_all_trivia.py
+else
+    # Generate trivia for next 7 days (if not already exists)
+    echo "Generating trivia for the next 7 days..."
+    python manage.py generate_trivia_week --days 7 || echo "Trivia generation skipped"
+fi
 
 # Import data if RUN_IMPORT is set
 if [ "$RUN_IMPORT" = "true" ]; then
