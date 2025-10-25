@@ -72,7 +72,7 @@ class Command(BaseCommand):
 
             created_count += 1
             self.stdout.write(
-                self.style.SUCCESS(f"✅ Created trivia for {trivia_date}: {theme}")
+                self.style.SUCCESS(f"Created trivia for {trivia_date}: {theme}")
             )
 
         self.stdout.write(

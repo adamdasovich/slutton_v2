@@ -8,7 +8,12 @@
       "Bash(git push:*)",
       "Bash(git commit -m \"$(cat <<''EOF''\nSet up automatic trivia generation for 7 days ahead\n\n- Created generate_trivia_week management command\n- Generates trivia for next 7 days on each deployment\n- Added /trivia/generate_daily/ endpoint for external cron\n- Questions are shuffled daily for variety\n- Random themes assigned each day\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git commit -m \"$(cat <<''EOF''\nAdd 100-question pool for daily trivia variety\n\n- Created question_pool.py with 100 diverse questions\n- Updated generate_trivia_week to randomly select 15 from pool\n- Each day now has truly different questions, not just reordered\n- Categories: History, Materials, Styles, Fit, Industry, Fashion\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(python manage.py shell:*)",
+      "Bash(python manage.py:*)",
+      "Bash(python -c \"import sys, json; data=json.load(sys.stdin); q12=data[''''trivia''''][''''questions''''][11]; print(f''''Question 12 ID: {q12[\"\"id\"\"]}''''); print(f''''Question text: {q12[\"\"question_text\"\"]}''''); print(f''''Options: {q12[\"\"options\"\"]}'''')\")",
+      "Bash(python check_q12.py:*)",
+      "Bash(python check_prod_q12.py:*)"
     ],
     "deny": [],
     "ask": []

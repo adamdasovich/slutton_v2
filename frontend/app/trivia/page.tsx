@@ -273,8 +273,21 @@ export default function TriviaPage() {
           handleCompleteGame();
         }
       }, 3000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting answer:', error);
+      const errorMessage = error.response?.data?.error || 'Failed to submit answer. Please try again.';
+      alert(errorMessage);
+
+      // If already answered, move to next question
+      if (error.response?.data?.error?.includes('already answered')) {
+        if (currentQuestionIndex < triviaData.questions.length - 1) {
+          setCurrentQuestionIndex(currentQuestionIndex + 1);
+          setUserAnswer('');
+          setQuestionStartTime(Date.now());
+        } else {
+          handleCompleteGame();
+        }
+      }
     }
   };
 
