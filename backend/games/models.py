@@ -39,7 +39,7 @@ class Game(models.Model):
     category = models.ForeignKey(GameCategory, on_delete=models.SET_NULL, null=True, related_name='games')
 
     # Game content
-    game_url = models.URLField(help_text="URL to the game (iframe source)")
+    game_url = models.CharField(max_length=500, help_text="URL or path to the game (e.g., /games/ouija or https://example.com)")
     thumbnail = models.ImageField(upload_to='games/thumbnails/', blank=True, null=True)
     preview_gif = models.ImageField(upload_to='games/previews/', blank=True, null=True, help_text="Animated preview")
 

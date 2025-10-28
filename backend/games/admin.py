@@ -1,7 +1,20 @@
 from django.contrib import admin
 from django.contrib import messages
+from django import forms
 from .models import GameCategory, Game, GameProgress, GameRating, DailyMemoryImages
 from .claude_image_service import ClaudeImageGenerator
+
+
+class GameAdminForm(forms.ModelForm):
+    """Custom form to allow relative paths in game_url"""
+    game_url = forms.CharField(
+        max_length=500,
+        help_text="URL or path to the game (e.g., /games/ouija or https://example.com)"
+    )
+
+    class Meta:
+        model = Game
+        fields = '__all__'
 
 
 @admin.register(GameCategory)
@@ -13,6 +26,7 @@ class GameCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
+    form = GameAdminForm
     list_display = ['name', 'category', 'difficulty', 'play_count', 'average_rating', 'is_featured', 'is_active', 'created_at']
     list_filter = ['category', 'difficulty', 'is_featured', 'is_active', 'requires_account']
     search_fields = ['name', 'description', 'short_description']
